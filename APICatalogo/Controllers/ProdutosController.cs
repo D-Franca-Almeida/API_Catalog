@@ -21,23 +21,39 @@ namespace APICatalogo.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Produto>> Get()
         {
-            var produtos = _context.Produtos.ToList();
-            if (produtos is null)
+            try
             {
-                return NotFound("Produtos não encontrados...");  // Retorna o erro quando os dados forem nulos
+                var produtos = _context.Produtos.AsNoTracking().ToList();
+                if (produtos is null)
+                {
+                    return NotFound("Produtos não encontrados...");  // Retorna o erro quando os dados forem nulos
+                }
+                return produtos;
             }
-            return produtos;
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    "Ocorreu um problema ao tratar sua solicitação. ");
+            }
         }
 
         [HttpGet("{id:int}", Name = "ObterProduto")]
         public ActionResult<Produto> Get(int id)
         {
-            var produtos = _context.Produtos.FirstOrDefault(p => p.ProdutoId == id);
-            if (produtos is null)
+            try
             {
-                return NotFound();
+                var produtos = _context.Produtos.AsNoTracking().FirstOrDefault(p => p.ProdutoId == id);
+                if (produtos is null)
+                {
+                    return NotFound();
+                }
+                return produtos;
             }
-            return produtos;
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    "Ocorreu um problema ao tratar sua solicitação. ");
+            }
         }
         #endregion
 

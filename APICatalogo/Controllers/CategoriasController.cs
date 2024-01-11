@@ -22,30 +22,54 @@ namespace APICatalogo.Controllers
         [HttpGet("produtos")]  //Rota diferente, definida para não dar conflito de métodos GET
         public ActionResult<IEnumerable<Categoria>> GetCategoriasProdutos()
         {
-            // Retorna as Categorias com seus produtos relacionados, pelo "Método Include" 
-            return _context.Categorias.Include(p => p.Produtos).ToList();
+            try
+            {
+                // Retorna as Categorias com seus produtos relacionados, pelo "Método Include" 
+                return _context.Categorias.AsNoTracking().Include(p => p.Produtos).ToList();
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    "Ocorreu um problema ao tratar sua solicitação. ");
+            }
         }
 
         [HttpGet]
         public ActionResult<IEnumerable<Categoria>> Get()
         {
-            var categorias = _context.Categorias.ToList();
-            if (categorias == null)
+            try
             {
-                return NotFound("Categorias não encontradas...");  // Retorna o erro quando os dados forem nulos
+                var categorias = _context.Categorias.AsNoTracking().ToList(); // Otimizando processamento
+                if (categorias == null)
+                {
+                    return NotFound("Categorias não encontradas...");  // Retorna o erro quando os dados forem nulos
+                }
+                return categorias;
             }
-            return categorias;
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    "Ocorreu um problema ao tratar sua solicitação. ");
+            }
         }
 
         [HttpGet("{id:int}", Name = "ObterCategoria")]
         public ActionResult<Categoria> Get(int id)
         {
-            var categorias = _context.Categorias.FirstOrDefault(p => p.CategoriaId == id);
-            if (categorias is null)
+            try
             {
-                return NotFound();
+                var categorias = _context.Categorias.AsNoTracking().FirstOrDefault(p => p.CategoriaId == id);
+                if (categorias is null)
+                {
+                    return NotFound();
+                }
+                return categorias;
             }
-            return categorias;
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    "Ocorreu um problema ao tratar sua solicitação. ");
+            }
         }
 
         #endregion
