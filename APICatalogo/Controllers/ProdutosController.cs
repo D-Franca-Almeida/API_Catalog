@@ -16,7 +16,7 @@ namespace APICatalogo.Controllers
             _context = context;
         }
 
-        #region Get
+        #region GET
         [HttpGet]
         public ActionResult<IEnumerable<Produto>> Get()
         {
@@ -28,7 +28,7 @@ namespace APICatalogo.Controllers
             return produtos;
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("{id:int}", Name="ObterProduto")] 
         public ActionResult<Produto> Get(int id)
         {
             var produtos = _context.Produtos.FirstOrDefault(p => p.ProdutoId == id);
@@ -41,6 +41,21 @@ namespace APICatalogo.Controllers
         #endregion
 
         #region POST
+
+        [HttpPost]
+        public ActionResult Post(Produto produto)
+        {
+            if(produto is null)
+            {
+                return BadRequest();
+            }
+            _context.Produtos.Add(produto);
+            _context.SaveChanges(); //Salva contexto no banco 
+
+            //Retorna o 201 created no header location
+            return new CreatedAtRouteResult("ObterProduto", new { id = produto.ProdutoId }, produto);
+            
+        }
 
 
 
