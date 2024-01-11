@@ -16,6 +16,7 @@ namespace APICatalogo.Controllers
             _context = context;
         }
 
+        #region Get
         [HttpGet]
         public ActionResult<IEnumerable<Produto>> Get()
         {
@@ -26,6 +27,38 @@ namespace APICatalogo.Controllers
             }
             return produtos;
         }
+
+        [HttpGet("{id:int}")]
+        public ActionResult<Produto> Get(int id)
+        {
+            var produtos = _context.Produtos.FirstOrDefault(p => p.ProdutoId == id);
+            if(produtos is null)
+            {
+                return NotFound();
+            }
+            return produtos;
+        }
+        #endregion
+
+        #region POST
+
+
+
+        #endregion
+
+
+        #region PUT
+
+
+        #endregion
+
+
+        #region DELETE
+
+        #endregion
+
+
+
 
 
     }
