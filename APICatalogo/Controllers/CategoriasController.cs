@@ -61,7 +61,7 @@ namespace APICatalogo.Controllers
                 var categorias = _context.Categorias.AsNoTracking().FirstOrDefault(p => p.CategoriaId == id);
                 if (categorias is null)
                 {
-                    return NotFound();
+                    return NotFound($"Categoria com id= {id} não encontrada.");
                 }
                 return categorias;
             }

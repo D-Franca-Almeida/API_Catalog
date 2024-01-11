@@ -45,7 +45,7 @@ namespace APICatalogo.Controllers
                 var produtos = _context.Produtos.AsNoTracking().FirstOrDefault(p => p.ProdutoId == id);
                 if (produtos is null)
                 {
-                    return NotFound();
+                    return NotFound($"Produto com id= {id} não encontrado.");
                 }
                 return produtos;
             }
